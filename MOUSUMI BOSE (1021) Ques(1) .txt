@@ -1,0 +1,47 @@
+Name - Mousumi Bose
+Course - Bsc (Hons) Mathematics (1st Year)
+Roll No. - 20191021
+
+Ques(1) :-
+
+mysql> Create database DU_Library;
+mysql> use DU_Library;
+
+mysql> Create table LibraryBooks (Accession_number integer Primary key, Title varchar(50), Author varchar(30),
+        -> Department varchar(30), PurchaseDate date, Price decimal(8,2)) ;
+
+mysql> Create table IssuedBooks (Accession_number integer, Borrower varchar(30),
+        -> Foreign Key (Accession_number) references LibraryBooks(Accession_number)) ;
+
+(a)   Primary key -  Accession_number in table LibraryBooks
+        Foreign Key -  Accession_number in table IssuedBooks
+
+mysql> insert into LibraryBooks values ( 2521,"Mordern Chemistry","Rachna Sagar","Chemistry",'2002-06-11',350.00) ;
+mysql> insert into LibraryBooks values ( 3421,"Database System Concepts","Bayross","CS",'2001-05-14',400.00) ;
+mysql> insert into LibraryBooks values ( 4321,"Python Programming","Navathe","CS",'2002-06-25',430.00) ;
+mysql> insert into LibraryBooks values ( 5321,"Discrete Maths","RD Sharma","Mathematics",'2001-04-04',550.00) ;
+mysql> insert into LibraryBooks values ( 5421,"Literature","Rachna Sagar","English",'2003-08-14',500.00) ;
+
+mysql> insert into IssuedBooks values ( 5321,"Ananya") ;
+mysql> insert into IssuedBooks values ( 4321,"Aman") ;
+mysql> insert into IssuedBooks values ( 5421,"Naman") ;
+mysql> insert into IssuedBooks values ( 3421,"Riya");
+mysql> insert into IssuedBooks values ( 2521,"Arya") ;
+
+(b)   mysql> set Foreign_Key_checks = off ;
+       mysql> delete from IssuedBooks where Accession_number = 3421 ;
+       mysql> delete from LibraryBooks where Title = "Database System Concepts" ;
+       mysql> set Foreign_Key_checks = on ;
+
+(c)   mysql>  Update LibraryBooks
+               ->  set Department = "CS" where Title = "Discrete Maths" ;
+
+(d)   mysql>  Select Title from LibraryBooks
+               ->  where department = "CS" ;
+
+(e)   mysql>  Select Title from LibraryBooks where Department = "CS" and Author = "Navathe" ;
+ 
+(f)   mysql>  Select Title from LibraryBooks L, IssuedBooks I
+              ->  where L.Accession_number = I.Accession_number and L.Department = "CS" ;
+
+(g)   mysql>  Select Title from LibraryBooks where Price < 500.00 and PurchaseDate between '1999-01-01' and '2004-01-01' ;

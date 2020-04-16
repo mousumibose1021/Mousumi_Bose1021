@@ -1,0 +1,81 @@
+
+Ques(5) :-
+
+mysql> Create database Product ;
+mysql> use Product ;
+
+mysql> Create table Suppliers( SNo int(8) Primary key, Sname varchar(20), Status char(20), SCity char(30)) ;
+
+mysql> Create table Parts( PNo int(8) Primary key, Pname varchar(20), Colour varchar(20), Weight int(4), City char(20)) ;
+
+mysql> Create table Project( JNo int(8) Primary key, Jname char(20), Jcity char(20)) ;
+
+mysql> Create table  Shipment( Sno varchar(20), Pno int(8), Jno int(8), Quantity int(8),
+        -> Foreign Key(Sno) references suppliers(SNo),
+        -> Foreign Key(Pno) references Parts(PNo),
+        -> Foreign Key(Jno) references Project(JNo));
+
+mysql> insert into Suppliers values (101,"S1",30,"London") ;
+mysql> insert into Suppliers values (102,"S2",19,"New York") ;
+mysql> insert into Suppliers values (103,"S1",22,"Paris") ;
+mysql> insert into Suppliers values (104,"S2",70,"Los Angeles") ;
+mysql> insert into Suppliers values (105,"S3",15,"Singapore") ;
+
+mysql> insert into Parts values ( 501,"P1","Black",16,"Paris") ;
+mysql> insert into Parts values ( 502,"P2","Red",40,"London") ;
+mysql> insert into Parts values ( 503,"P3","Gray",20,"London") ;
+mysql> insert into Parts values ( 504,"P2","Green",60,"Singapore") ;
+mysql> insert into Parts values ( 505,"P2","Black",10,"New York") ;
+
+mysql> insert into project values (1001,"J1","London") ;
+mysql> insert into project values (1002,"J2","New York") ;
+mysql> insert into project values (1003,"J3","New York") ;
+mysql> insert into project values (1004,"J4","Singapore") ;
+mysql> insert into project values (1005,"J4","Delhi");
+
+mysql> insert into Shipment values (101,504,1002,250) ;
+mysql> insert into Shipment values (103,505,1003,100) ;
+mysql> insert into Shipment values (105,502,1003,500) ;
+mysql> insert into Shipment values (101,503,1001,300) ;
+mysql> insert into Shipment values (102,501,1005,750) ;
+mysql> insert into Shipment values (101,501,1002,100) ;
+
+(a)    Primary key - Sno in table Suppliers
+                                  Pno in table Parts
+                                  Jno in table Project
+
+        Foreign Key - Sno in table Shipment
+                                 Pno in table Shipment
+                                 Jno in table Shipment
+
+(b) mysql> select SNo from Suppliers where SCity = "Paris" and Status > 20;
+
+(c) mysql> Select * from Suppliers where SNo IN (select SNo from Shipment 
+                                                                                         where PNo IN (select Pno from Parts where Pname = "P2")) Order by SNo;
+
+(d) mysql> Select Sname from Suppliers where Sno IN (Select distinct SNo from Shipment 
+                                                                                                  where PNo IN (select PNo from Parts where Pname != "P2")) ;
+ 
+(e) mysql> select s.SNo, s.PNo, s.Jno, s.Quantity, s.Quantity*p.Weight as "Total_Shipment_Weight" 
+               -> from Shipment s, Parts p where s.PNo = p.PNo;
+
+(f) mysql> Select * from Shipment where Quantity between 300 and 750;
+
+(g) mysql> select PNo from Parts where Weight > 16 or PNo IN (select PNo from Shipment 
+               -> where SNo IN (select s.SNo from Shipment s, Suppliers sp where s.SNo = sp.SNo and sp.Sname = "S2")) ;
+
+(h) mysql> select City from Parts where Colour = "Red" and PNo IN (select PNo from Shipment where Quantity > 5) ;
+
+(i) mysql> select * from Parts where PNo IN (select PNo from Shipment 
+             -> where SNo IN (select SNo from Suppliers where Scity = "London")) ;
+
+(j) mysql> select PNo from Shipment where SNo IN (select SNo from Suppliers where Scity = "London") 
+             -> and Jno IN (Select Jno from Project where Jcity = "London");
+
+(k) mysql> select count(distinct(Jno)) as "No. of Project Supplied by Supplier S1" from Shipment 
+               -> where sno IN(select SNo from Suppliers where Sname = "S1") ;
+
+(l) mysql> select count(*) from Parts
+              -> where PNo IN (Select PNo from Shipment where SNo IN (select SNo from Suppliers where Sname = "S1")) and Pname = "P1" ;
+
+------------END--------------
