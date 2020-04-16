@@ -5,24 +5,24 @@ mysql> Create database TwoWheeler ;
 mysql> use TwoWheeler ;
 
 mysql> Create table Customer ( CustID varchar(20) Primary Key, email varchar(50), Name char(30), Phone varchar(10) unique,
-        -> ReferrerID varchar(20)) ;
+    -> ReferrerID varchar(20)) ;
 
 mysql> Create table BicycleModel ( ModelNo varchar(10) Primary key, Manufacturer char(20), Style varchar(20)) ;
 
 mysql> Create table Bicycle ( BicycleId varchar(20) Primary key, DatePurchased date, Color char(10), CustID varchar(20),
-         -> ModelNo varchar(10), Foreign Key(CustID) references Customer(CustID),
-         -> Foreign Key(ModelNo) references BicycleModel(ModelNo)) ;
+    -> ModelNo varchar(10), Foreign Key(CustID) references Customer(CustID),
+    -> Foreign Key(ModelNo) references BicycleModel(ModelNo)) ;
 
 mysql> Create table Service ( StartDate date, BicycleId varchar(20), EndDate date,
-         -> Foreign Key(BicycleId) references Bicycle(BicycleId)) ;
+    -> Foreign Key(BicycleId) references Bicycle(BicycleId)) ;
 
-(a)     Primary key - CustID in table Customer
-                                   ModelNo in table BicycleModel
-                                   BicycleId in table Bicycle
+(a)  Primary key - CustID in table Customer
+                   ModelNo in table BicycleModel
+                   BicycleId in table Bicycle
 
-         Foreign Key - CustID in table Bicycle
-                                   ModelNo in table Bicycle
-                                   BicycleId in table Service
+     Foreign Key - CustID in table Bicycle
+                   ModelNo in table Bicycle
+                   BicycleId in table Service
 
 mysql> insert into Customer values (1001,"riya123@gmail.com","Riya",9873645321,"C1");
 mysql> insert into Customer values (1002,"ankit4373@gmail.com","Ankit Kumar",8373876327,"A2");
@@ -49,14 +49,14 @@ mysql> insert into Service values ('2019-05-17','B501','2019-05-19');
 mysql> insert into Service values ('2020-01-18','B502','2020-01-20');
 
 (b) mysql> Select * from Customer where CustID IN (Select CustID from Bicycle 
-                                                                                                where ModelNo IN (select ModelNo from BicycleModel 
-                                                                                                where Manufacturer = "Honda")) ;
+                                                   where ModelNo IN (select ModelNo from BicycleModel 
+                                                                     where Manufacturer = "Honda")) ;
 
-(c) mysql> Select * from BicycleModel where ModelNo IN (select ModelNo from Bicycle 
-                                                                                                          where CustID IN(select CustID from Customer 
-                                                                                                          where ReferrerID = "C1")) ;
+(c) mysql> Select * from BicycleModel where ModelNo IN (select ModelNo from Bicycle
+                                                        where CustID IN(select CustID from Customer 
+                                                                        where ReferrerID = "C1")) ;
 
 (d) mysql> select bm.Manufacturer from Bicycle bi, BicycleModel bm 
-               -> where bi.ModelNo = bm.ModelNo and bi.Color = "Red" ;
+        -> where bi.ModelNo = bm.ModelNo and bi.Color = "Red" ;
 
 (e) mysql> select ModelNo from Bicycle where BicycleID IN (select distinct BicycleID from Service) ;
