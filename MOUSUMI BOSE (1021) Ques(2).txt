@@ -5,18 +5,18 @@ mysql> Create database CS_Student ;
 mysql> use CS_Student ;
 
 mysql> Create table Personal_Information ( College_Roll_no int(10) Primary key, Name char(30), DOB date, Address varchar(70),
-         ->  Marks_in_12th int(3), Phone_no varchar(10)) ;
+    -> Marks_in_12th int(3), Phone_no varchar(10)) ;
 
 mysql> Create table Paper_Details ( Paper_Code int(4) Primary key, Name_of_the_Paper char(30) unique) ;
 
 mysql> Create table Academic_Details( Roll_no int(10) Primary key, Paper_Code int(4), Attendence int(3), Marks int(3),
-        -> Foreign Key(College_Roll_no) references Personal_Information (College_Roll_no),
-        -> Foreign Key(Paper_Code) references Paper_Details(Paper_Code)) ;
+    -> Foreign Key(College_Roll_no) references Personal_Information (College_Roll_no),
+    -> Foreign Key(Paper_Code) references Paper_Details(Paper_Code)) ;
  
-(a)    Primary key - Roll_no in table Personal_Informartion
-                                  Paper_Code in table Paper_Details
-         Foreign Key - Roll_no in table Academic_Details
-                                   Paper_Code in table Academic_Details 
+(a)  Primary key - Roll_no in table Personal_Informartion
+                   Paper_Code in table Paper_Details
+     Foreign Key - Roll_no in table Academic_Details
+                   Paper_Code in table Academic_Details 
 
 mysql> insert into Personal_Information values (1201,"Amrita,'2001-01-04',"Delhi",91,9102829875);
 mysql> insert into Personal_Information values (1205,"Anu ",'2001-04-29',"Uttarakhand",89,9748483743);
@@ -37,17 +37,17 @@ mysql> insert into Academic_Details values (1214,2,65,91);
 mysql> insert into Academic_Details values (1219,1,75,65);
 
 (b) mysql> select pd.Paper_Code, pd.Name_of_the_Paper, pi.Name from Paper_Details pd, Personal_Information pi 
-              -> where Paper_Code = 2 
-              -> and pi.College_Roll_no IN ( Select College_Roll_no from Academic_Details 
-                                                             where Paper_Code = 2 and Attendence > 75 and Marks > 60) ;
+        -> where Paper_Code = 2 
+        -> and pi.College_Roll_no IN ( Select College_Roll_no from Academic_Details 
+                                       where Paper_Code = 2 and Attendence > 75 and Marks > 60) ;
 
 (c) mysql> select Name from Personal_Information pi, Academic_Details ad 
-              -> where pi.College_Roll_no = ad.College_Roll_no and ad.Marks > 60 and ad.Paper_Code = 1 and pi.Address = "Delhi" ;
+        -> where pi.College_Roll_no = ad.College_Roll_no and ad.Marks > 60 and ad.Paper_Code = 1 and pi.Address = "Delhi" ;
 
 (d) mysql> select pi.Name, ad.Attendence, ad.Marks from Personal_Information pi, Academic_Details ad 
-              ->  where pi.College_Roll_no = ad.College_Roll_no ;
+        ->  where pi.College_Roll_no = ad.College_Roll_no ;
 
 (e) mysql> select Name from Personal_Information pi, Academic_Details ad 
-              ->  where pi.College_Roll_no = ad.College_Roll_no and 
-              ->  pi.College_Roll_no = (Select College_Roll_no from Academic_Details 
-                                                           where Marks = (Select max(Marks) from Academic_Details));
+        ->  where pi.College_Roll_no = ad.College_Roll_no and 
+        ->  pi.College_Roll_no = (Select College_Roll_no from Academic_Details 
+                                  where Marks = (Select max(Marks) from Academic_Details));
